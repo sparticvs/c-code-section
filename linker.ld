@@ -1,9 +1,10 @@
 SECTIONS
 {
-    .rel.rodata.mine : {
-        PROVIDE(__start_mine = .);
-        *(.mine)
-        PROVIDE(__end_mine = .);
+    .mine : {
+    . = ALIGN(8);
+    __start_mine = .;
+    *(.mine)
+    __end_mine = .;
     }
 }
-INSERT AFTER .text;
+INSERT AFTER .text
