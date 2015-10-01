@@ -1,12 +1,38 @@
 /*
- *  * MIT License
- *   * Copyright (c) 2015 - Charles `sparticvs` Timko
- *    */
+ * MIT License
+ * Copyright (c) 2015 - Charles `sparticvs` Timko
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
+
+#ifdef ALT_DESIGN
+
+typedef uint16_t (*init_func)(void **obj);
+typedef uint16_t (*fini_func)(void *obj);
+
+#define REGISTER_VECTOR(DECL,ADDR)   \
+    static DECL vector_##DECL##_##ADDR \
+    __attribute__((section(".vector.##DECL"))) = ADDR
+
+#define REG_INIT(N) REGISTER_VECTOR(init_func, N)
+#define REG_FINI(N) REGISTER_VECTOR(fini_func, N)
+
+uint16_t init_driver_a(void **obj) {
+    printf("Entered Init Driver A\n");
+    return 0;
+}
+REG_INIT(init_driver_a);
+
+uint16_t fini_driver_a(void *obj) {
+    printf("Entered Init Driver B\n");
+    return 0;
+}
+REG_FINI(fini_driver_a);
+
+#endif
 
 typedef void (*register_func)(void);
 
